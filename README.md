@@ -41,3 +41,5 @@ succeed only one state.
 Exercise 2. Familiarize yourself with Python Notebooks if python is your language of choice.
 
 Exercise 3. Familiarize yourself with Latex (overleaf.com).
+
+FCSB NU E STEAUA
