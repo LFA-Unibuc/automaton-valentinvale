@@ -15,7 +15,7 @@ States :
     state1
     state2
     state3 ,F
-    state4
+    state4 ,S
     stateK ,S
 End
 #

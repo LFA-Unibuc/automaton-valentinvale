@@ -1,3 +1,7 @@
+class ValidationException(BaseException):
+    pass
+
+
 class Automaton():
 
     def __init__(self, config_file):
@@ -18,7 +22,7 @@ class Automaton():
         while line.strip() != "Sigma :":
             if line.strip().split()[0] != "#":
                 f.close()
-                return False
+                raise ValidationException
             line = f.readline()
 
         line = f.readline()
@@ -27,14 +31,14 @@ class Automaton():
                 self.words.append(line.strip())
             else:
                 f.close()
-                return False
+                raise ValidationException
             line = f.readline()
 
         line = f.readline()
         while line.strip() != "States :":
             if line.strip().split()[0] != "#":
                 f.close()
-                return False
+                raise ValidationException
             line = f.readline()
 
         line = f.readline()
@@ -52,7 +56,7 @@ class Automaton():
                     nrS = nrS + 1
                 else:
                     f.close()
-                    return False
+                    raise ValidationException
             elif len(line.strip().split()) == 3:
                 self.states.append(line.split(",")[0].strip())
                 if line.strip().split(",")[1] == "F" and line.strip().split(",")[2] == "S" or line.strip().split(",")[1] == "S" and line.strip().split(",")[2] == "F":
@@ -60,20 +64,20 @@ class Automaton():
                     nrS = nrS + 1
                 else:
                     f.close()
-                    return False
+                    raise ValidationException
             else:
                 f.close()
-                return False
+                raise ValidationException
             line = f.readline()
 
         if nrF == 0 or nrS == 0 or nrS > 1:
-            return False
+            raise ValidationException
 
         line = f.readline()
         while line.strip() != "Transitions :":
             if line.strip().split()[0] != "#":
                 f.close()
-                return False
+                raise ValidationException
             line = f.readline()
 
         line = f.readline()
@@ -81,12 +85,13 @@ class Automaton():
             if len(line.strip().split(",")) == 3:
                 if line.split(",")[0].strip() not in self.states or line.split(",")[2].strip() not in self.states or line.split(",")[1].strip() not in self.words:
                     f.close()
-                    return False
+                    raise ValidationException
             else:
                 f.close()
-                return False
+                raise ValidationException
             line = f.readline()
 
+        f.close()
         return True
 
     def accepts_input(self, input_str):
@@ -108,4 +113,7 @@ class Automaton():
 
 if __name__ == "__main__":
     a = Automaton('input.txt')
-    print(a.validate())
+    try:
+        print(a.validate())
+    except ValidationException:
+        print("Validation Exception")
