@@ -16,7 +16,7 @@ States :
     state2
     state3 ,F
     state4 ,S
-    stateK ,S
+    stateK
 End
 #
 # comment lines ( skip them )

@@ -8,6 +8,7 @@ class Automaton():
         self.config_file = config_file
         self.states = []
         self.words = []
+        self.transitions = []
         print("Hi, I'm an automaton!")
 
     def validate(self):
@@ -89,10 +90,11 @@ class Automaton():
             else:
                 f.close()
                 raise ValidationException
+            self.transitions.append(line.strip())
             line = f.readline()
 
         f.close()
-        return True
+        return self.states, self.words, self.transitions
 
     def accepts_input(self, input_str):
         """Return a Boolean
