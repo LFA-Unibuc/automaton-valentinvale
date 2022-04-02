@@ -9,6 +9,9 @@ class Automaton():
         self.states = []
         self.words = []
         self.transitions = []
+        self.initial = []
+        self.final = []
+        self.dfaDict = {}
         print("Hi, I'm an automaton!")
 
     def validate(self):
@@ -53,8 +56,11 @@ class Automaton():
                 self.states.append(line.split(",")[0].strip())
                 if line.strip().split(",")[1] == "F":
                     nrF = nrF + 1
+                    self.final.append(line.strip().split(",")[0].replace(" ", ""))
+
                 elif line.strip().split(",")[1] == "S":
                     nrS = nrS + 1
+                    self.initial.append(line.strip().split(",")[0].replace(" ", ""))
                 else:
                     f.close()
                     raise ValidationException
@@ -63,6 +69,8 @@ class Automaton():
                 if line.strip().split(",")[1] == "F" and line.strip().split(",")[2] == "S" or line.strip().split(",")[1] == "S" and line.strip().split(",")[2] == "F":
                     nrF = nrF + 1
                     nrS = nrS + 1
+                    self.final.append(line.strip().split(",")[0].replace(" ", ""))
+                    self.initial.append(line.strip().split(",")[0].replace(" ", ""))
                 else:
                     f.close()
                     raise ValidationException
@@ -94,7 +102,27 @@ class Automaton():
             line = f.readline()
 
         f.close()
-        return self.states, self.words, self.transitions
+
+        d = {}
+
+        for transition in self.transitions:
+            state1, word, state2 = transition.split(",")
+            state1 = state1.replace(" ", "")
+            state2 = state2.replace(" ", "")
+            word = word.replace(" ", "")
+
+            if state1 not in d.keys():
+                dt = {}
+                if word not in dt.keys():
+                    dt[word] = state2
+                d[state1] = dt
+            else:
+                if word not in dt.keys():
+                    d[state1][word] = state2
+
+        self.dfaDict = d
+
+        return True
 
     def accepts_input(self, input_str):
         """Return a Boolean

@@ -16,13 +16,14 @@ States :
     state2
     state3 ,F
     state4 ,S
-    stateK
+    state5
 End
 #
 # comment lines ( skip them )
 #
 Transitions :
     state1, word2 , state3
-    state1, word1 , stateK
+    state4, word1 , state5
+    state5, word3 , state3
 End
 
