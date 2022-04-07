@@ -114,15 +114,19 @@ class Automaton():
             if state1 not in d.keys():
                 dt = {}
                 if word not in dt.keys():
-                    dt[word] = state2
+                    dt[word] = []
+                    dt[word].append(state2)
+                else:
+                    dt[word].append(state2)
                 d[state1] = dt
             else:
                 if word not in dt.keys():
-                    d[state1][word] = state2
+                    d[state1][word] = []
+                    d[state1][word].append(state2)
+                else:
+                    d[state1][word].append(state2)
 
         self.dfaDict = d
-
-        return True
 
     def accepts_input(self, input_str):
         """Return a Boolean
