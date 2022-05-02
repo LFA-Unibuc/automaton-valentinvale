@@ -12,6 +12,8 @@ class Automaton():
         self.initial = []
         self.final = []
         self.dfaDict = {}
+        self.nfaDict = {}
+        self.transitionsNFA = []
         print("Hi, I'm an automaton!")
 
     def validate(self):
@@ -99,11 +101,15 @@ class Automaton():
                 f.close()
                 raise ValidationException
             self.transitions.append(line.strip())
+            tranzitie = line.strip().split(", ")
+            tranzitie[1] = tranzitie[1][0:1]
+            self.transitionsNFA.append(tuple(tranzitie))
             line = f.readline()
 
         f.close()
 
         d = {}
+        tranzitiiStari = {}
 
         for transition in self.transitions:
             state1, word, state2 = transition.split(",")
@@ -126,7 +132,29 @@ class Automaton():
                 else:
                     d[state1][word].append(state2)
 
+        for transition in self.transitionsNFA:
+            if transition[0] not in tranzitiiStari:
+                tranzitiiStari[transition[0]] = {}
+                tranzitiiStari[transition[0]][transition[1]] = [transition[2]]
+            elif transition[1] in tranzitiiStari[transition[0]]:
+                tranzitiiStari[transition[0]][transition[1]].append(transition[2])
+            else:
+                tranzitiiStari[transition[0]][transition[1]] = [transition[2]]
+
+        for stare in self.states:
+            if stare not in tranzitiiStari:
+                tranzitiiStari[stare] = {}
+                for word in self.words:
+                    tranzitiiStari[stare][word] = []
+        for st in tranzitiiStari:
+            for word in self.words:
+                if word not in tranzitiiStari[st]:
+                    tranzitiiStari[st][word] = []
+        self.nfaDict = tranzitiiStari
+
         self.dfaDict = d
+
+        return self.nfaDict
 
     def accepts_input(self, input_str):
         """Return a Boolean
